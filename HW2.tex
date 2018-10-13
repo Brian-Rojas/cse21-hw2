@@ -1,0 +1,439 @@
+\documentclass[11pt,letterpaper,unboxed,cm]{hmcpset}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{enumerate, comment}
+\usepackage{algorithmic}
+
+\newcommand{\st}{~\mid~}
+
+\name{}
+\class{CSE 21 Fall 2018}
+\assignment{Homework 2}
+\duedate{Due: Sunday, October 14, 2018 at 10:00pm}
+
+\begin{document}
+
+\begin{center}
+\begin{minipage}[t]{5.7in}
+\rule{\linewidth}{2pt}
+{\sc Instructions}\newline
+
+Homework should be done in groups of {\bf one to three} people. You are free to change group members at any time throughout the quarter.
+Problems should be solved together, not divided up between partners.  Homework must be submitted
+through {\bf Gradescope} by {\bf a single representative}. Submissions must be received by {\bf 10:00pm} on the due date, and there are no exceptions to this rule.\\
+
+You will be able to look at your scanned work before submitting it.
+Please ensure that your submission is {\bf legible} (neatly written and not too faint)
+or your homework may not be graded.\\
+
+Students should consult their textbook, class notes, lecture slides, instructors, TAs, and tutors when
+they need help with homework. Students should not look for answers to homework problems in other texts or sources, including the Internet. You may ask questions about the homework in office hours, but {\bf not on Piazza}.\\
+
+Your assignments in this class will be evaluated not only on the correctness of your answers, but on your ability to present your ideas clearly and logically. You should {\bf always explain} how you arrived at your conclusions and {\bf justify your answers} with mathematically sound reasoning. Whether you use formal proof techniques or write a more informal argument for why something is true, your answers should always be well-supported. Your goal should be to {\bf convince the reader} that your results and methods are sound. \\
+
+For questions that require pseudocode, you can follow the same format as the textbook, or you can write pseudocode in your own style, as long as you specify what your notation means. For example, are you using ``='' to mean assignment or to check equality? You are welcome to use any algorithm from class as a subroutine in your pseudocode. For example, if you want to sort list A using InsertionSort, you can call InsertionSort(A) instead of writing out the pseudocode for InsertionSort.\\
+
+{\sc Required Reading} Rosen Sections 3.2 and 3.3
+\newline
+
+{\sc Key Concepts:} Linear Search, Binary Search; Asymptotic notation, including the definitions of $O$, $\Theta$, and $\Omega$; best-case, worst-case, average-case; analyzing the run-time of algorithms
+\newline
+
+\rule{\linewidth}{2pt}
+\end{minipage} \hfill
+
+
+\end{center} \newpage
+
+
+
+
+\begin{enumerate}
+
+
+%================== PROBLEM 1 ===============================
+
+\item A list of $n$ distinct integers $a_1, a_2, \dots, a_n$ is called a {\em mountain list} if the elements reading from left to right first increase and then decrease. The location of the {\em peak} is the value $i$ where $a_i$ is greatest. For example, the list $1, 2, 3, 7, 6$ is a mountain list with a peak at $4$. We also consider a list of increasing numbers to be a mountain list with a peak at $n$, and a list of decreasing numbers to be a mountain list with a peak at $1$.
+
+\begin{enumerate}[(a)]
+\item (5 points) Give pseudocode for an algorithm based on linear search that takes as input a mountain list $a_1, a_2, \dots, a_n$ and returns the location of the peak. Show that your algorithm does no more than $n-1$ comparisons on any input of size $n$.
+
+\bigskip
+function findPeak($a_1, a_2, \dots, a_n : n > 0)$
+\begin{algorithmic}
+\STATE peak = 1
+\FOR{ i = 1 to n - 1 }
+    \IF {$a_i \leq a_{i+1}$}
+        \STATE peak = i
+    \ELSE
+        \STATE return peak
+    \ENDIF
+    \STATE return peak
+\ENDFOR
+\bigskip
+
+Proof: Since we are using a for loop from 1 to $n-1$. There is no way our only comparison line $a_i \leq a_{i+1}$ can loop more than $n-1$ times.
+
+\end{algorithmic}
+\bigskip
+
+\item (5 points) Give an algorithm based on binary search that takes as input a mountain list $a_1, a_2, \dots, a_n$ and returns the location of the peak. Your algorithm should be able to find the peak in any list of size $16$ with no more than $4$ comparisons (in general, up to $k$ comparisons for a list of size $2^k$.) You should provide pseudocode and an English description of your algorithm, but you do not need to prove that it meets the requirements for the number of comparisons.
+
+\bigskip
+function findPeakBinary($a_1, a_2, \dots, a_n : n > 0)$
+\begin{algorithmic}
+\STATE low = 1
+\STATE high = n
+\WHILE{$low < high$}
+    \STATE $\displaystyle mid = floor(\frac{high + low}{2})$
+    \IF{$a_{mid} > a_{mid+1}$}
+        \STATE high = mid
+    \ELSE
+        \STATE low = mid + 1
+    \ENDIF
+\ENDWHILE
+\bigskip
+
+English Description: Find the mid element and check right element. If mid element is greater than the element right of mid then peak should be either the current mid element or on the right side, therefore update high to equal mid - 1. Else we can assume the peak is either the current mid element or on the left side and update low to mid + 1. Then find the new mid element and do the same logic as long as low is less than high.
+
+\end{algorithmic}
+\bigskip
+
+\end{enumerate}
+
+
+%================== PROBLEM 2 ===============================
+\bigskip
+\item (5 points total - 1 points for each part)
+State the big-$\Theta$ class (in simplest form) that each of the following functions belongs to.  Justify your answer in each case.
+\begin{enumerate}
+\item
+$\log(n)+n\log(n)$
+
+\bigskip
+$\lim_{n\to\infty} \frac{log(n) + nlog(n)}{nlog(n)}$ \\
+ = $\lim_{n\to\infty} \frac{log(n)(1 + n)}{nlog(n)}$ \\
+ = $\lim_{n\to\infty} \frac{(1 + n)}{n}$ \\
+ = $\lim_{n\to\infty} \frac{1}{n} + 1$ \\
+ = 1 \\
+ Limit is constant, so nlog(n) grows at the same rate as log(n) + nlog(n), which means: \\
+ $log(n) + nlog(n) \in \Theta(nlog(n))$
+\bigskip
+
+\item
+$n\log(n^2)+n\log(n)$
+
+\bigskip
+$\lim_{n\to\infty} \frac{nlog(n^2) + nlog(n)}{nlog(n)}$ \\
+ = $\lim_{n\to\infty} \frac{2nlog(n) + nlog(n)}{nlog(n)}$ \\
+ = $\lim_{n\to\infty} \frac{nlog(n)(2 + 1)}{nlog(n)}$ \\
+ = 3 \\
+ Limit is constant, so nlog(n) grows at the same rate as $nlog(n^2) + nlog(n)$, which means: \\
+ $nlog(n^2) + nlog(n) \in \Theta(nlog(n))$
+\bigskip
+
+\item
+$\sqrt{n}+\sqrt[3]{n}$
+
+\bigskip
+$\lim_{n\to\infty} \frac{\sqrt{n} + \sqrt[3]{n}}{\sqrt{n})}$ \\
+ = $\lim_{n\to\infty} 1 + \frac{\sqrt[3]{n}}{\sqrt{n})}$ \\
+ = $\lim_{n\to\infty} 1 + \frac{1}{n^{\frac{1}{2} - \frac{1}{3}}}$ \\
+ = $\lim_{n\to\infty} 1 + \frac{1}{n^{\frac{1}{6}}}$ \\
+ = 1 \\
+ Limit is constant, so $\sqrt{n}$ grows at the same rate as $\sqrt{n} + \sqrt[3]{n}$, which means: \\
+ $\sqrt{n} + \sqrt[3]{n} \in \Theta(\sqrt{n})$
+\bigskip
+
+\item
+$\log(n)+\log(2n)+\log(3n)$
+
+\bigskip
+$\lim_{n\to\infty} \frac{log(n) + log(2n) + log(3n)}{log(n)}$ \\
+ = $\lim_{n\to\infty} \frac{log(n) + log(2) + log(n) + log(3) + log(n)}{log(n)}$ \\
+ = $\lim_{n\to\infty} \frac{3log(n) + log(2) + log(3)}{log(n)}$ \\
+ = $\lim_{n\to\infty} 3 + \frac{log(2)}{log(n)} + \frac{log(3)}{log(n)}$ \\
+ = 3 \\
+ Limit is constant, so log(n) grows at the same rate as log(n) + log(2n) + log(3n), which means: \\
+ $log(n) + log(2n) + log(3n) \in \Theta(log(n))$
+\bigskip
+
+\item
+$3^{2n}+2^{3n}$
+
+\bigskip
+$3^{2n} + 2^{3n}$ \\
+= $9^{n} + 8^{n}$ \\
+ From the simplified formula, you can clearly tell $9^{n}$ dominates $8^{n}$, which means \\
+ $3^{2n} + 2^{3n} \in \Theta(3^{2n})$
+\bigskip
+
+\end{enumerate}
+
+
+
+%================== PROBLEM 3 ===============================
+\bigskip
+\item (10 points total - 2 points for each part (a)-(e), part (f) is optional)
+
+In this problem, we wish to compare the time taken to perform an algorithm on an input of size $n$ versus on an input of size $4n$. We saw that the exact time will vary with environmental factors such as hardware and software details, but the order of the algorithm tells us how we expect the time to scale when we increase the input size.
+
+For each function below, suppose we are running an algorithm of that order (i.e. in that $\Theta$ class) on an input of size $n$ then again on an input of size $4n$. By what multiplicative factor do we expect the total run-time of our algorithm to increase?
+
+For example, an answer of $3$ means that we expect our algorithm to take $3$ times as long on an input of size $4n$ versus on an input of size $n$. Similarly, an answer of $n$ means that we expect it to take $n$ times as long on an input of size $4n$ versus on an input of size $n$.
+
+\begin{enumerate}[(a)]
+\item  $2n$
+
+\bigskip
+$\frac{2(4n)}{2n}$ = 4
+\bigskip
+
+\item $n^3$
+
+\bigskip
+$\frac{(4n)^{3}}{n^3}$ = 64
+\bigskip
+
+\item  $2^{n^2}$
+
+\bigskip
+$\frac{2^{(4n)^2}}{2^{n^2}}$
+= $2^{16n^2 - n^2}$
+= $2^{15n^2}$
+\bigskip
+
+\item  $n!$
+
+\bigskip
+$\frac{(4n)!}{n!}$
+\bigskip
+
+\item  $n^n$
+
+\bigskip
+$\frac{(4n)^{4n}}{n^n}$
+= $\frac{4^{4n}*n^{4n}}{n^n}$
+= $4^{4n}*n^{3n}$
+\bigskip
+
+\item (Optional) $\log_2 n$
+
+\end{enumerate}
+
+
+
+%================== PROBLEM 4 ===============================
+\bigskip
+\item (20 points total - 2 points each) For each part, say whether the statement is true or false and justify your answer. \textbf{All logarithms are base 2 unless otherwise noted.}
+
+\bigskip
+
+\begin{enumerate}[(a)]
+\item  $\displaystyle 2^n \in \Theta(4^n)$
+
+\bigskip
+$\lim_{n\to\infty} \frac{4^n}{2^n}$ \\
+ = $\lim_{n\to\infty} \frac{2^{2n}}{2^n}$ \\
+ = $\lim_{n\to\infty} 2^{2n}$ \\
+ = $\infty$ \\
+ Limit is infinity, so ${4^n}$ dominates ${2^n}$, which means false.
+\bigskip
+
+\item  $\displaystyle \log(n^2)+\log(10^{10} n^{10}) \in O(\log n)$
+
+\bigskip
+$\lim_{n\to\infty} \frac{log(n^2) + log(10^{10}n^{10})}{log(n)}$ \\
+ = $\lim_{n\to\infty} \frac{2log(n) + log(100) + 10log(n)}{log(n)}$ \\
+ = $\lim_{n\to\infty} 2 + 10 + \frac{log(100)}{log(n)}$ \\
+ = 12 \\
+ Limit is constant, so:
+ $log(n^2) + log(10^{10}n^{10})$ grows as fast as ${log(n)}$, which means the statement is true.
+\bigskip
+
+\item  $\displaystyle \sqrt{2^n} \in O((\sqrt 2)^n)$
+
+$2^{n^\frac{1}{2}} = 2^{\frac{n}{2}}$ \\
+They are equivalent, so growth rate be the same. Therefore, statement is true.
+
+\item  $ \displaystyle \ln n \in \Theta(\log_2 n)$
+
+\bigskip
+$ln(n) = log_{e}(n)$ which is the same growth rate as $log_{2}(n)$. Therefore the statement is true.
+\bigskip
+
+\item  $\displaystyle \lfloor \frac{n+1}{2}\rfloor \in \Theta(n)$. Here, $\lfloor x\rfloor$ is the floor function
+
+\bigskip
+$\frac{n+1}{2} - 1 \leq \lfloor \frac{n+1}{2}\rfloor \leq \frac{n+1}{2}$ \\
+By the squeeze theorem, we can say $\lfloor \frac{n+1}{2}\rfloor \in \Theta(n)$. The statement is true.
+\bigskip
+
+\item $\displaystyle\frac{n}{\ln n} \in \Omega( (\ln n)^2)$
+
+\bigskip
+$\lim_{n\to\infty} \frac{\frac{n}{ln(n)}}{ln(n)^{2}}$ \\
+= $\lim_{n\to\infty} \frac{n}{ln(n)^{3}}$ = $\frac{\infty}{\infty}$ (use l'hospital) \\
+= $\lim_{n\to\infty} \frac{n}{3ln(n)^{2}}$ = $\frac{\infty}{\infty}$ (use l'hospital) \\
+= $\lim_{n\to\infty} \frac{n}{6ln(n)}$ = $\frac{\infty}{\infty}$ (use l'hospital) \\
+= $\lim_{n\to\infty} \frac{n}{6}$ = $\infty$ \\
+
+Since the limit is $\infty, \frac{n}{ln(n)}$ grows faster than $ln(n)^{2}$, therefore, it cannot be big Omega. The statement is false.
+\bigskip
+
+\item $\displaystyle 2^n \in O(n!)$
+
+\bigskip
+n! = $1 \cdot 2 \cdot 3$ . . . $\cdot$ n \\
+$2^n$ = $2 \cdot 2 \cdot 2$ . . . $\cdot$ 2 \\
+From the written out definitions of the equations, we can see that n! dominates $2^n$. Therefore, the statement is false.
+\bigskip
+
+\item
+$\displaystyle 2^n \in O(3^n/n^2)$
+
+\bigskip
+$\lim_{n\to\infty} ln(\frac{\frac{2^n}{3^n}}{n^2})$ \\
+= $\lim_{n\to\infty} ln(2^n) + ln(n^2) - ln(3^n)$ \\
+= $\lim_{n\to\infty} nln(2) + 2ln(n) - nln(3)$ \\
+= $\lim_{n\to\infty} nln(\frac{2}{3}) + 2ln(n)$ \\
+= -$\infty$
+\bigskip
+
+\item  If $\log f(n) \in \Theta(\log g(n))$, then $f(n) \in \Theta(g(n))$
+
+
+
+
+\item  If $f(n) \in \Theta(g(n))$, then $3^{f(n)} \in \Theta(3^{g(n)})$
+
+
+
+
+\end{enumerate}
+
+
+
+%================== PROBLEM 5 ===============================
+\bigskip
+\item
+
+\begin{enumerate}[(a)]
+
+\item (5 points) Let $f(n)$ and $g(n)$ be positive valued increasing functions of $n$. Using the definition of Big-$O$, prove that:
+$$f(n) + g(n) \in O(max(f(n),g(n))).$$
+
+
+
+
+\item (5 points)
+Let $f(n)$ and $g(n)$ be positive valued increasing functions of $n$. Using the definition of Big-$O$, prove that:
+$$\text{If    }f(n)\in O(g(n))\text{   and   }
+g(n) \in O(h(n))\text{   then   } f(n) \in O(h(n)).$$
+
+
+
+
+
+\item (5 points) Let $a(n)$ and $b(n)$ be functions from the nonnegative integers to the positive real numbers. We say that $a(n)\in \Omega(b(n))$ if there exist positive constants $C$ and $k$ such that $a(n) \geq C \cdot b(n)$ for all $n>k$.
+
+Now let $f(n)$, $g(n)$, and $h(n)$ be functions from the nonnegative integers to the positive real numbers. Prove the following transitive property from the above definition of $\Omega$:
+\begin{center}
+If $f (n) \in \Omega(g (n))$ and $g (n) \in \Omega(h(n))$ then
+$f (n) \in \Omega(h(n)).$
+\end{center}
+
+
+
+\end{enumerate}
+
+%================== PROBLEM 6 ===============================
+\bigskip
+\item The following algorithm takes as input a list $h_1, h_2, \dots, h_n$ of $n$ homework scores, where $n\geq 2$. Each homework score is a real number from $0$ to $100$. The algorithm computes the average of the homework scores, where the lowest score is dropped (not included in the calculation.)
+
+\noindent {\bf procedure} HWAvg ($h_1, h_2, \dots, h_n$: a list of $n\geq2$ homework scores between $0$ and $100$)
+\begin{enumerate}[1.]
+\item ~~~$m:=1$
+\item ~~~{\bf for} $i := 2$ to $n$
+\item ~~~~~~~~~{\bf if} $h_i<h_m$ {\bf then} $m:=i$
+\item ~~~$total:=0$
+\item ~~~{\bf for} $j := 1$ to $n$
+\item ~~~~~~~~~{\bf if} $j \neq m$ {\bf then} $total:=total+h_j$
+\item ~~~{\bf return} $total/(n-1)$
+\end{enumerate}
+
+\begin{enumerate}[(a)]
+\item  (4 points) What is the worst-case runtime of the HWAvg algorithm in $\Theta$ notation? Justify your answer by referring to the pseudocode.
+
+
+
+\item  (6 points) Give pseudocode for a different algorithm, SimplerHWAvg, that uses only one loop to solve the same problem, and analyze its worst-case runtime in $\Theta$ notation. What effect does using only one loop have on the algorithm's efficiency?
+
+
+
+\end{enumerate}
+
+
+
+%================== PROBLEM 7 ===============================
+\bigskip
+\item Suppose we are given a list of real numbers, and we want to know whether the list contains any duplicate elements. The following two algorithms solve this problem, returning $true$ if some pair of list elements are the same, and $false$ if not. The algorithm for BubbleSort used in MatchExistsB is also provided below.
+
+\bigskip
+
+\noindent {\bf procedure} MatchExistsA ($a_1, a_2, \dots, a_n$: a list of real numbers with $n\geq 1$)
+\begin{enumerate}[1.]
+\item ~~~{\bf for} $i:=2$ to $n$
+\item ~~~~~~{\bf for} $j:=1$ to $i-1$
+\item ~~~~~~~~~{\bf if} $a_j == a_i$ {\bf then}
+\item ~~~~~~~~~~~~{\bf return} $true$
+\item ~~~{\bf return} $false$
+\end{enumerate}
+
+\bigskip
+
+\noindent {\bf procedure} MatchExistsB ($a_1, a_2, \dots, a_n$: a list of real numbers with $n\geq 1$)
+\begin{enumerate}[1.]
+\item ~~~BubbleSort($a_1, a_2, \dots, a_n$)
+\item ~~~{\bf for} $i:=1$ to $n-1$
+\item ~~~~~~{\bf if} $a_i == a_{i+1}$ {\bf then}
+\item ~~~~~~~~~~~~{\bf return} $true$
+\item ~~~{\bf return} $false$
+\end{enumerate}
+
+
+\bigskip
+
+
+\noindent {\bf procedure} BubbleSort ($a_1, a_2, \dots, a_n$: a list of real numbers with $n\geq 2$)
+\begin{enumerate}[1.]
+\item ~~~{\bf for} $i := 1$ to $n-1$
+\item ~~~~~~{\bf for} $j := 1$ to $n-i$
+\item ~~~~~~~~~{\bf if} $a_j>a_{j+1}$ {\bf then} interchange $a_j$ and $a_{j+1}$
+\end{enumerate}
+
+\bigskip
+
+\begin{enumerate}[(a)]
+\item (5 points) Describe all worst-case inputs to each algorithm. Find the worst-case running time of each algorithm using $\Theta$ notation. Justify your answers by referring to the pseudocode. Which algorithm is more efficient in the worst case?
+
+
+
+\item  (5 points) Describe all best-case inputs to each algorithm. Find the best-case running time of each algorithm using $\Theta$ notation. Justify your answers by referring to the pseudocode. Which algorithm is more efficient in the best case?
+
+
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+\end{enumerate}
+
+\end{document}
